@@ -6,10 +6,12 @@ import com.humanbooster.exam_spring.dto.UserDTO;
 import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.model.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ModelMapperUtil {
     // Project <-> ProjectDTO
-    public static ProjectDTO toProjectDTO(Project project) {
+    public ProjectDTO toProjectDTO(Project project) {
         if (project == null) return null;
         ProjectDTO dto = new ProjectDTO();
         dto.setId(project.getId());
@@ -18,7 +20,7 @@ public class ModelMapperUtil {
         return dto;
     }
 
-    public static Project toProject(ProjectDTO dto) {
+    public Project toProject(ProjectDTO dto) {
         if (dto == null) return null;
         Project project = new Project();
         project.setId(dto.getId());
@@ -28,7 +30,7 @@ public class ModelMapperUtil {
     }
 
     // Task <-> TaskDTO
-    public static TaskDTO toTaskDTO(Task task) {
+    public TaskDTO toTaskDTO(Task task) {
         if (task == null) return null;
         TaskDTO dto = new TaskDTO();
         dto.setId(task.getId());
@@ -39,7 +41,7 @@ public class ModelMapperUtil {
         return dto;
     }
 
-    public static Task toTask(TaskDTO dto) {
+    public Task toTask(TaskDTO dto) {
         if (dto == null) return null;
         Task task = new Task();
         task.setId(dto.getId());
@@ -50,7 +52,7 @@ public class ModelMapperUtil {
     }
 
     // User <-> UserDTO
-    public static UserDTO toUserDTO(User user) {
+    public UserDTO toUserDTO(User user) {
         if (user == null) return null;
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
@@ -58,7 +60,7 @@ public class ModelMapperUtil {
         return dto;
     }
 
-    public static User toUser(UserDTO dto) {
+    public User toUser(UserDTO dto) {
         if (dto == null) return null;
         User user = new User();
         user.setId(dto.getId());

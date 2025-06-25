@@ -7,6 +7,7 @@ import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.model.TaskStatus;
 import com.humanbooster.exam_spring.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -15,15 +16,21 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelMapperUtilTest {
+    private ModelMapperUtil modelMapperUtil;
+
+    @BeforeEach
+    public void setUp() {
+        modelMapperUtil = new ModelMapperUtil();
+    }
 
     @Test
     void testUserToUserDTOAndBack() {
         User user = new User(1L, "alice", Collections.emptyList(), Collections.emptyList());
-        UserDTO dto = ModelMapperUtil.toUserDTO(user);
+        UserDTO dto = modelMapperUtil.toUserDTO(user);
         assertEquals(user.getId(), dto.getId());
         assertEquals(user.getUsername(), dto.getUsername());
 
-        User mapped = ModelMapperUtil.toUser(dto);
+        User mapped = modelMapperUtil.toUser(dto);
         assertEquals(user.getId(), mapped.getId());
         assertEquals(user.getUsername(), mapped.getUsername());
     }
@@ -32,12 +39,12 @@ public class ModelMapperUtilTest {
     void testProjectToProjectDTOAndBack() {
         User creator = new User(2L, "bob", null, null);
         Project project = new Project(10L, "Projet X", creator, Collections.emptyList());
-        ProjectDTO dto = ModelMapperUtil.toProjectDTO(project);
+        ProjectDTO dto = modelMapperUtil.toProjectDTO(project);
         assertEquals(project.getId(), dto.getId());
         assertEquals(project.getName(), dto.getName());
         assertNotNull(dto.getCreator());
 
-        Project mapped = ModelMapperUtil.toProject(dto);
+        Project mapped = modelMapperUtil.toProject(dto);
         assertEquals(project.getId(), mapped.getId());
         assertEquals(project.getName(), mapped.getName());
         assertNotNull(mapped.getCreator());
@@ -48,14 +55,14 @@ public class ModelMapperUtilTest {
         Project project = new Project(20L, "Projet Y", null, null);
         User assignee = new User(3L, "carol", null, null);
         Task task = new Task(100L, "Tâche 1", TaskStatus.TODO, project, assignee);
-        TaskDTO dto = ModelMapperUtil.toTaskDTO(task);
+        TaskDTO dto = modelMapperUtil.toTaskDTO(task);
         assertEquals(task.getId(), dto.getId());
         assertEquals(task.getTitle(), dto.getTitle());
         assertEquals(task.getStatus(), dto.getStatus());
         assertEquals(project.getId(), dto.getProjectId());
         assertEquals(assignee.getId(), dto.getAssigneeId());
 
-        Task mapped = ModelMapperUtil.toTask(dto);
+        Task mapped = modelMapperUtil.toTask(dto);
         assertEquals(task.getId(), mapped.getId());
         assertEquals(task.getTitle(), mapped.getTitle());
         assertEquals(task.getStatus(), mapped.getStatus());
@@ -66,12 +73,12 @@ public class ModelMapperUtilTest {
 
     @Test
     void testNullSafety() {
-        assertNull(ModelMapperUtil.toUserDTO(null));
-        assertNull(ModelMapperUtil.toUser(null));
-        assertNull(ModelMapperUtil.toProjectDTO(null));
-        assertNull(ModelMapperUtil.toProject(null));
-        assertNull(ModelMapperUtil.toTaskDTO(null));
-        assertNull(ModelMapperUtil.toTask(null));
+        assertNull(modelMapperUtil.toUserDTO(null));
+        assertNull(modelMapperUtil.toUser(null));
+        assertNull(modelMapperUtil.toProjectDTO(null));
+        assertNull(modelMapperUtil.toProject(null));
+        assertNull(modelMapperUtil.toTaskDTO(null));
+        assertNull(modelMapperUtil.toTask(null));
     }
 
     @Test
@@ -84,7 +91,7 @@ public class ModelMapperUtilTest {
         creator.setProjects(List.of(project));
         assignee.setTasks(List.of(task));
 
-        ProjectDTO projectDTO = ModelMapperUtil.toProjectDTO(project);
+        ProjectDTO projectDTO = modelMapperUtil.toProjectDTO(project);
         assertEquals("Projet Z", projectDTO.getName());
         assertEquals("dave", projectDTO.getCreator().getUsername());
     }
