@@ -30,7 +30,7 @@ public class Project {
     @JsonManagedReference("creator-projects")
     private User creator;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference("project-tasks")
     private List<Task> tasks;
 }
