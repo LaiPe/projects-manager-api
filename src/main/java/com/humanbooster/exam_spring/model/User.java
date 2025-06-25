@@ -1,5 +1,6 @@
 package com.humanbooster.exam_spring.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,8 +26,10 @@ public class User {
     private String username;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonManagedReference("creator-projects")
     private List<Project> projects;
 
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    @JsonManagedReference("assignee-tasks")
     private List<Task> tasks;
 }

@@ -1,5 +1,6 @@
 package com.humanbooster.exam_spring.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,10 +31,12 @@ public class Task {
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "project_id")
+    @JsonManagedReference("project-tasks")
     private Project project;
 
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "assignee_id")
+    @JsonManagedReference("assignee-tasks")
     private User assignee;
 }
