@@ -3,7 +3,7 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "username": "alice"
+  "username": "alicea"
 }
 
 ### Récupérer un utilisateur par ID
@@ -15,10 +15,7 @@ Content-Type: application/json
 
 {
   "name": "Projet Test",
-  "creator": {
-    "id": 1,
-    "username": "alice"
-  }
+  "creatorId": 1
 }
 
 ### Récupérer un projet par ID
@@ -32,12 +29,8 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "taskDTO": {
-    "title": "Tâche 1",
-    "status": "TODO",
-    "projectId": 1,
-    "assigneeId": 1
-  },
+  "title": "Tâche 1",
+  "status": "TODO",
   "projectId": 1,
   "assigneeId": 1
 }

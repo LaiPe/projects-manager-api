@@ -29,13 +29,13 @@ public class Task {
     private TaskStatus status;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(nullable = false, name = "project_id")
     @JsonManagedReference("project-tasks")
     private Project project;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(nullable = false, name = "assignee_id")
     @JsonManagedReference("assignee-tasks")
     private User assignee;

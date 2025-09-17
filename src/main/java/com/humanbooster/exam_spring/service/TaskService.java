@@ -18,12 +18,12 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public Task save(Task task, Long projectId, Long assigneeId) {
+    public Task save(Task task) {
         Project project = new Project();
-        project.setId(projectId);
+        project.setId(task.getProject().getId());
 
         User assignee = new User();
-        assignee.setId(assigneeId);
+        assignee.setId(task.getAssignee().getId());
 
         task.setProject(project);
         task.setAssignee(assignee);

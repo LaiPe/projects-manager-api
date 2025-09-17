@@ -16,7 +16,7 @@ public class ModelMapperUtil {
         ProjectDTO dto = new ProjectDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
-        dto.setCreator(toUserDTO(project.getCreator()));
+        dto.setCreatorId(project.getCreator() != null ? project.getCreator().getId() : null);
         return dto;
     }
 
@@ -25,7 +25,11 @@ public class ModelMapperUtil {
         Project project = new Project();
         project.setId(dto.getId());
         project.setName(dto.getName());
-        project.setCreator(toUser(dto.getCreator()));
+        if (dto.getCreatorId() != null) {
+            User creator = new User();
+            creator.setId(dto.getCreatorId());
+            project.setCreator(creator);
+        }
         return project;
     }
 
@@ -47,7 +51,16 @@ public class ModelMapperUtil {
         task.setId(dto.getId());
         task.setTitle(dto.getTitle());
         task.setStatus(dto.getStatus());
-        // Les champs project et assignee doivent être set à part si besoin (requête en base)
+        if (dto.getProjectId() != null) {
+            Project project = new Project();
+            project.setId(dto.getProjectId());
+            task.setProject(project);
+        }
+        if (dto.getAssigneeId() != null) {
+            User assignee = new User();
+            assignee.setId(dto.getAssigneeId());
+            task.setAssignee(assignee);
+        }
         return task;
     }
 

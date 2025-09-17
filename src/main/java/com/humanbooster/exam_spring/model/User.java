@@ -25,11 +25,11 @@ public class User {
     @Size(min = 3, max = 70)
     private String username;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creator")
     @JsonManagedReference("creator-projects")
     private List<Project> projects;
 
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assignee")
     @JsonManagedReference("assignee-tasks")
     private List<Task> tasks;
 }

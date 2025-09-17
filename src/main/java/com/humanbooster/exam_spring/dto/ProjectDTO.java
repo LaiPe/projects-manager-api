@@ -6,5 +6,5 @@ import lombok.Data;
 public class ProjectDTO {
     private Long id;
     private String name;
-    private UserDTO creator;
+    private Long creatorId;
 }

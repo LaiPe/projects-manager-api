@@ -25,12 +25,12 @@ public class Project {
     @NotBlank
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(nullable = false, name = "creator_id")
     @JsonManagedReference("creator-projects")
     private User creator;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     @JsonManagedReference("project-tasks")
     private List<Task> tasks;
 }
