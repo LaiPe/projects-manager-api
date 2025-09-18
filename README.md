@@ -15,7 +15,7 @@ Projects Manager API est une application Spring Boot permettant de gérer des pr
 
    - Clone le dépôt :
      ```sh
-     git clone <repo_url>
+     git clone https://github.com/LaiPe/projects-manager-api
      cd projects-manager-api
      ```
    - Lance les services (API + MySQL) :
