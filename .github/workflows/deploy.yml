@@ -48,8 +48,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ OWNER_LC }}/${{ github.repository }}:${{ github.sha }}
-            ghcr.io/${{ OWNER_LC }}/${{ github.repository }}:latest
+            ghcr.io/${{ env.OWNER_LC }}/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/${{ github.repository }}:latest
 
       # ---------- Setup SSH key for deploy ----------
       - name: Start ssh-agent and add key
