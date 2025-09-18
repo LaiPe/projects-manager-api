@@ -30,8 +30,10 @@ jobs:
       - name: Set lowercase variables
         run: |
           echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+          echo "REPO_LC=${REPO,,}" >>${GITHUB_ENV}
         env:
           OWNER: '${{ github.repository_owner }}'
+          REPO: '${{ github.repository }}'
 
       # ---------- Login to GHCR registry ----------
       - name: Login to GHCR
@@ -48,8 +50,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/${{ github.repository }}:${{ github.sha }}
-            ghcr.io/${{ env.OWNER_LC }}/${{ github.repository }}:latest
+            ghcr.io/${{ env.OWNER_LC }}/${{ env.REPO_LC }}:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/${{ env.REPO_LC }}:latest
 
       # ---------- Setup SSH key for deploy ----------
       - name: Start ssh-agent and add key
