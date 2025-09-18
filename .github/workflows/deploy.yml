@@ -5,7 +5,7 @@ on:
 
 permissions:
   contents: read
-  packages: write    # pour GHCR si utilisé
+  packages: write    # pour GHCR
 
 jobs:
   build-test-deploy:
