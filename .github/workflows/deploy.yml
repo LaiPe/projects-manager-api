@@ -15,7 +15,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ---------- Run tests (adapte la commande à ton projet) ----------
+      # ---------- Setup Java 21 ----------
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # ou 'zulu'
+          java-version: '21'
+
+      # ---------- Run tests ----------
       - name: Run tests
         run: mvn test
 
