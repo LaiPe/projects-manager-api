@@ -42,7 +42,7 @@ public class ModelMapperUtilTest {
         ProjectDTO dto = modelMapperUtil.toProjectDTO(project);
         assertEquals(project.getId(), dto.getId());
         assertEquals(project.getName(), dto.getName());
-        assertNotNull(dto.getCreator());
+        assertNotNull(dto.getCreatorId());
 
         Project mapped = modelMapperUtil.toProject(dto);
         assertEquals(project.getId(), mapped.getId());
@@ -55,6 +55,9 @@ public class ModelMapperUtilTest {
         Project project = new Project(20L, "Projet Y", null, null);
         User assignee = new User(3L, "carol", null, null);
         Task task = new Task(100L, "Tâche 1", TaskStatus.TODO, project, assignee);
+        task.setProject(project);
+        task.setAssignee(assignee);
+        
         TaskDTO dto = modelMapperUtil.toTaskDTO(task);
         assertEquals(task.getId(), dto.getId());
         assertEquals(task.getTitle(), dto.getTitle());
@@ -66,9 +69,8 @@ public class ModelMapperUtilTest {
         assertEquals(task.getId(), mapped.getId());
         assertEquals(task.getTitle(), mapped.getTitle());
         assertEquals(task.getStatus(), mapped.getStatus());
-        // Les champs project et assignee ne sont pas mappés dans toTask
-        assertNull(mapped.getProject());
-        assertNull(mapped.getAssignee());
+        assertEquals(project.getId(), mapped.getProject().getId());
+        assertEquals(assignee.getId(), mapped.getAssignee().getId());
     }
 
     @Test
@@ -93,6 +95,6 @@ public class ModelMapperUtilTest {
 
         ProjectDTO projectDTO = modelMapperUtil.toProjectDTO(project);
         assertEquals("Projet Z", projectDTO.getName());
-        assertEquals("dave", projectDTO.getCreator().getUsername());
+        assertEquals(4L, projectDTO.getCreatorId());
     }
 } 
