@@ -2,14 +2,44 @@
 
 ## Contexte
 
-Projects Manager API est une application Spring Boot permettant de gérer des projets, des tâches et des utilisateurs. Elle expose une API REST pour la création, la modification, la suppression et la consultation de projets et de tâches, avec une gestion des statuts et des utilisateurs associés. Elle utilise une base de données MySQL.
+Projects Manager API est une application Spring Boot permettant de gérer des projets, des tâches et des utilisateurs. Elle expose une API REST pour la création, la modification, la suppression et la consultation de projets et de tâches, avec une gestion des statuts et des utilisateurs associés.
+
+## 🚀 Environnements d'exécution
+
+Cette application supporte **trois environnements distincts** :
+
+- **🛠️ Développement** : Base de données H2 en mémoire, exécution locale
+- **🧪 Pré-production** : MySQL via Docker, application conteneurisée
+- **🚀 Production** : MySQL optimisé, image depuis GitHub Container Registry
+
+📖 **[Guide détaillé des environnements](ENVIRONMENTS.md)**
+
+## Démarrage rapide
+
+### Développement local (H2)
+```sh
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+Console H2 : http://localhost:8080/h2-console
+
+### Pré-production (Docker)
+```sh
+docker-compose up --build
+```
+
+### Production
+```sh
+# 1. Configurer .env.prod basé sur .env.prod.example
+# 2. Lancer
+docker-compose -f docker-compose.prod.yml up -d
+```
 
 ## Utilisation en développement
 
 1. **Prérequis**
    - Java 21
    - Maven
-   - Docker et Docker Compose
+   - Docker et Docker Compose (pour les environnements conteneurisés)
 
 2. **Lancer l'environnement de développement**
 
