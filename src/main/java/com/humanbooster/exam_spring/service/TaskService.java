@@ -4,51 +4,33 @@ import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.model.User;
 import com.humanbooster.exam_spring.repository.TaskRepository;
-import lombok.RequiredArgsConstructor;
+import com.humanbooster.exam_spring.service.generic.GenericJPAService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
-public class TaskService {
+public class TaskService extends GenericJPAService<Task, Long> {
 
     private final TaskRepository taskRepository;
 
-    public Task save(Task task) {
-        Project project = new Project();
-        project.setId(task.getProject().getId());
-
-        User assignee = new User();
-        assignee.setId(task.getAssignee().getId());
-
-        task.setProject(project);
-        task.setAssignee(assignee);
-        return taskRepository.save(task);
-    }
-
-    public Task update(Task task, Long id) {
-        task.setId(id);
-        return taskRepository.save(task);
+    public TaskService(TaskRepository taskRepository) {
+        super(taskRepository);
+        this.taskRepository = taskRepository;
     }
 
     @Transactional(readOnly = true)
-    public Optional<Task> findById(Long id) {
-        return taskRepository.findById(id);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Task> findTasksByProjectId(Long projectId) {
+    public List<Task> getTasksByProjectId(Long projectId) {
         Project project = new Project();
         project.setId(projectId);
         return taskRepository.findTaskByProject(project);
     }
 
     @Transactional(readOnly = true)
-    public List<Task> findTasksByAssigneeId(Long assigneeId) {
+    public List<Task> getTasksByAssigneeId(Long assigneeId) {
         User assignee = new User();
         assignee.setId(assigneeId);
         return taskRepository.findTasksByAssignee(assignee);
