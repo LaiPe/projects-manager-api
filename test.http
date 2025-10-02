@@ -42,10 +42,7 @@ Content-Type: application/json
 
 {
   "id": 1,
-  "title": "Tâche 1",
-  "status": "IN_PROGRESS",
-  "projectId": 1,
-  "assigneeId": 1
+  "status": "IN_PROGRESS"
 }
 
 ### Récupérer les tâches d'un projet

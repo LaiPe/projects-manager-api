@@ -2,6 +2,7 @@ package com.humanbooster.exam_spring.utils;
 
 import com.humanbooster.exam_spring.dto.ProjectDTO;
 import com.humanbooster.exam_spring.dto.TaskDTO;
+import com.humanbooster.exam_spring.dto.UpdateStatusTaskDTO;
 import com.humanbooster.exam_spring.dto.UserDTO;
 import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
@@ -82,7 +83,8 @@ public class ModelMapperUtilTest {
         assertNull(modelMapperUtil.toProjectDTO(null));
         assertNull(modelMapperUtil.toProject(null));
         assertNull(modelMapperUtil.toTaskDTO(null));
-        assertNull(modelMapperUtil.toTask(null));
+        assertNull(modelMapperUtil.toTask((TaskDTO) null));
+        assertNull(modelMapperUtil.toTask((UpdateStatusTaskDTO) null));
     }
 
     @Test

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -30,14 +29,8 @@ public class TaskController {
 
     @PatchMapping
     public ResponseEntity<TaskDTO> updateStatus(@RequestBody @Valid UpdateStatusTaskDTO updateStatusTaskDTO) {
-        Optional<Task> fetchedTaskOpt = taskService.getById(updateStatusTaskDTO.getId());
-        if (fetchedTaskOpt.isPresent()) {
-            Task fetchedTask = fetchedTaskOpt.get();
-            fetchedTask.setStatus(updateStatusTaskDTO.getStatus());
-            taskService.update(fetchedTask, updateStatusTaskDTO.getId());
-            return ResponseEntity.ok(modelMapperUtil.toTaskDTO(fetchedTask));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return taskService.update(modelMapperUtil.toTask(updateStatusTaskDTO), updateStatusTaskDTO.getId())
+                .map(task -> ResponseEntity.ok(modelMapperUtil.toTaskDTO(task)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

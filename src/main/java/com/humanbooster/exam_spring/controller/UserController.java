@@ -8,6 +8,7 @@ import com.humanbooster.exam_spring.service.ProjectService;
 import com.humanbooster.exam_spring.service.TaskService;
 import com.humanbooster.exam_spring.service.UserService;
 import com.humanbooster.exam_spring.utils.ModelMapperUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class UserController {
     private final ModelMapperUtil  modelMapperUtil;
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         User savedUser = userService.create(modelMapperUtil.toUser(userDTO));
         return ResponseEntity.ok(modelMapperUtil.toUserDTO(savedUser));
     }
