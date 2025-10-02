@@ -6,6 +6,8 @@ import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.service.ProjectService;
 import com.humanbooster.exam_spring.service.TaskService;
 import com.humanbooster.exam_spring.utils.ModelMapperUtil;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,22 +26,23 @@ public class ProjectController {
     private final ModelMapperUtil modelMapperUtil;
 
     @PostMapping
-    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO projectDTO) {
-        Project savedProject = projectService.save(modelMapperUtil.toProject(projectDTO));
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectDTO projectDTO) {
+        Project savedProject = projectService.create(modelMapperUtil.toProject(projectDTO));
         return ResponseEntity.ok(modelMapperUtil.toProjectDTO(savedProject));
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable Long id) {
-        return projectService.findById(id)
+        return projectService.getById(id)
                 .map(projectDTO -> ResponseEntity.ok(modelMapperUtil.toProjectDTO(projectDTO)))
-                .orElse(null);
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/tasks")
     public ResponseEntity<List<TaskDTO>> getProjectTasks(@PathVariable Long id) {
         return ResponseEntity.ok(
-                taskService.findTasksByProjectId(id)
+                taskService.getTasksByProjectId(id)
                         .stream()
                         .map(modelMapperUtil::toTaskDTO)
                         .collect(Collectors.toList())

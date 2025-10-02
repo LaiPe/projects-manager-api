@@ -28,15 +28,15 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        User savedUser = userService.save(modelMapperUtil.toUser(userDTO));
+        User savedUser = userService.create(modelMapperUtil.toUser(userDTO));
         return ResponseEntity.ok(modelMapperUtil.toUserDTO(savedUser));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        return userService.findById(id)
+        return userService.getById(id)
                 .map(user -> ResponseEntity.ok(modelMapperUtil.toUserDTO(user)))
-                .orElse(null);
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/projects")
@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping("/{id}/tasks")
     public ResponseEntity<List<TaskDTO>> getTasksUser(@PathVariable Long id) {
         return ResponseEntity.ok(
-                taskService.findTasksByAssigneeId(id)
+                taskService.getTasksByAssigneeId(id)
                     .stream()
                     .map(modelMapperUtil::toTaskDTO)
                     .collect(Collectors.toList())

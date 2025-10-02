@@ -6,78 +6,34 @@ import com.humanbooster.exam_spring.dto.UserDTO;
 import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.model.User;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ModelMapperUtil {
-    // Project <-> ProjectDTO
-    public ProjectDTO toProjectDTO(Project project) {
-        if (project == null) return null;
-        ProjectDTO dto = new ProjectDTO();
-        dto.setId(project.getId());
-        dto.setName(project.getName());
-        dto.setCreatorId(project.getCreator() != null ? project.getCreator().getId() : null);
-        return dto;
-    }
+import org.mapstruct.Mapper;
 
-    public Project toProject(ProjectDTO dto) {
-        if (dto == null) return null;
-        Project project = new Project();
-        project.setId(dto.getId());
-        project.setName(dto.getName());
-        if (dto.getCreatorId() != null) {
-            User creator = new User();
-            creator.setId(dto.getCreatorId());
-            project.setCreator(creator);
-        }
-        return project;
-    }
+import org.mapstruct.Mapping;
 
-    // Task <-> TaskDTO
-    public TaskDTO toTaskDTO(Task task) {
-        if (task == null) return null;
-        TaskDTO dto = new TaskDTO();
-        dto.setId(task.getId());
-        dto.setTitle(task.getTitle());
-        dto.setStatus(task.getStatus());
-        dto.setProjectId(task.getProject() != null ? task.getProject().getId() : null);
-        dto.setAssigneeId(task.getAssignee() != null ? task.getAssignee().getId() : null);
-        return dto;
-    }
+@Mapper(componentModel = "spring")
+public interface ModelMapperUtil {
+    
+    @Mapping(source = "creator.id", target = "creatorId")
+    public ProjectDTO toProjectDTO(Project project);
 
-    public Task toTask(TaskDTO dto) {
-        if (dto == null) return null;
-        Task task = new Task();
-        task.setId(dto.getId());
-        task.setTitle(dto.getTitle());
-        task.setStatus(dto.getStatus());
-        if (dto.getProjectId() != null) {
-            Project project = new Project();
-            project.setId(dto.getProjectId());
-            task.setProject(project);
-        }
-        if (dto.getAssigneeId() != null) {
-            User assignee = new User();
-            assignee.setId(dto.getAssigneeId());
-            task.setAssignee(assignee);
-        }
-        return task;
-    }
+    @Mapping(source = "creatorId", target = "creator.id")
+    @Mapping(target = "tasks", ignore = true)
+    public Project toProject(ProjectDTO dto);
 
-    // User <-> UserDTO
-    public UserDTO toUserDTO(User user) {
-        if (user == null) return null;
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        return dto;
-    }
 
-    public User toUser(UserDTO dto) {
-        if (dto == null) return null;
-        User user = new User();
-        user.setId(dto.getId());
-        user.setUsername(dto.getUsername());
-        return user;
-    }
+    @Mapping(source = "project.id", target = "projectId")
+    @Mapping(source = "assignee.id", target = "assigneeId")
+    public TaskDTO toTaskDTO(Task task);
+
+    @Mapping(source = "projectId", target = "project.id")
+    @Mapping(source = "assigneeId", target = "assignee.id")
+    public Task toTask(TaskDTO dto);
+
+
+    public UserDTO toUserDTO(User user);
+
+    @Mapping(target = "projects", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    public User toUser(UserDTO dto);
 } 

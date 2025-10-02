@@ -1,18 +1,17 @@
 package com.humanbooster.exam_spring.dto;
 
+import com.humanbooster.exam_spring.model.TaskStatus;
+
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class UpdateStatusTaskDTO {
     @NotNull
     @Min(1L)
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 70)
-    private String username;
+    @NotNull
+    private TaskStatus status;
 }

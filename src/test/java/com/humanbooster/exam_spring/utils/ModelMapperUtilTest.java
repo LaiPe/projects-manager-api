@@ -9,6 +9,7 @@ import com.humanbooster.exam_spring.model.TaskStatus;
 import com.humanbooster.exam_spring.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,11 +17,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelMapperUtilTest {
+
     private ModelMapperUtil modelMapperUtil;
 
     @BeforeEach
     public void setUp() {
-        modelMapperUtil = new ModelMapperUtil();
+        modelMapperUtil = Mappers.getMapper(ModelMapperUtil.class);
     }
 
     @Test
