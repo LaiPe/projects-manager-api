@@ -1,9 +1,12 @@
 package com.humanbooster.exam_spring.utils;
 
-import com.humanbooster.exam_spring.dto.ProjectDTO;
-import com.humanbooster.exam_spring.dto.TaskDTO;
-import com.humanbooster.exam_spring.dto.UpdateStatusTaskDTO;
-import com.humanbooster.exam_spring.dto.UserDTO;
+import com.humanbooster.exam_spring.dto.project.ProjectDTO;
+import com.humanbooster.exam_spring.dto.task.TaskDTO;
+import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskDTO;
+import com.humanbooster.exam_spring.dto.user.CreateUserDTO;
+import com.humanbooster.exam_spring.dto.user.CreateUserMapper;
+import com.humanbooster.exam_spring.dto.user.GetUserDTO;
+import com.humanbooster.exam_spring.dto.user.GetUserMapper;
 import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.model.TaskStatus;
@@ -21,26 +24,41 @@ public class ModelMapperUtilTest {
 
     private ModelMapperUtil modelMapperUtil;
 
+    private CreateUserMapper createUserMapper;
+    private GetUserMapper getUserMapper;
+
     @BeforeEach
     public void setUp() {
         modelMapperUtil = Mappers.getMapper(ModelMapperUtil.class);
+
+        createUserMapper = Mappers.getMapper(CreateUserMapper.class);
+        getUserMapper = Mappers.getMapper(GetUserMapper.class);
     }
 
     @Test
     void testUserToUserDTOAndBack() {
-        User user = new User(1L, "alice", Collections.emptyList(), Collections.emptyList());
-        UserDTO dto = modelMapperUtil.toUserDTO(user);
-        assertEquals(user.getId(), dto.getId());
-        assertEquals(user.getUsername(), dto.getUsername());
+        User user = new User(1L, "alice", "password", Collections.emptyList(), Collections.emptyList());
+        GetUserDTO getUserDTO = getUserMapper.toDto(user);
+        assertEquals(user.getId(), getUserDTO.getId());
+        assertEquals(user.getUsername(), getUserDTO.getUsername());
 
-        User mapped = modelMapperUtil.toUser(dto);
-        assertEquals(user.getId(), mapped.getId());
-        assertEquals(user.getUsername(), mapped.getUsername());
+        User getUserMapperEntity = getUserMapper.toEntity(getUserDTO);
+        assertEquals(user.getId(), getUserMapperEntity.getId());
+        assertEquals(user.getUsername(), getUserMapperEntity.getUsername());
+
+
+        CreateUserDTO createUserDTO = createUserMapper.toDto(user);
+        assertEquals(user.getUsername(), createUserDTO.getUsername());
+        assertEquals(user.getPassword(), createUserDTO.getPassword());
+
+        User createUserMapperEntity = createUserMapper.toEntity(createUserDTO);
+        assertEquals(user.getUsername(), createUserMapperEntity.getUsername());
+        assertEquals(user.getPassword(), createUserMapperEntity.getPassword());
     }
 
     @Test
     void testProjectToProjectDTOAndBack() {
-        User creator = new User(2L, "bob", null, null);
+        User creator = new User(2L, "bob", "password", Collections.emptyList(), Collections.emptyList());
         Project project = new Project(10L, "Projet X", creator, Collections.emptyList());
         ProjectDTO dto = modelMapperUtil.toProjectDTO(project);
         assertEquals(project.getId(), dto.getId());
@@ -56,7 +74,7 @@ public class ModelMapperUtilTest {
     @Test
     void testTaskToTaskDTOAndBack() {
         Project project = new Project(20L, "Projet Y", null, null);
-        User assignee = new User(3L, "carol", null, null);
+        User assignee = new User(3L, "carol", "password", Collections.emptyList(), Collections.emptyList());
         Task task = new Task(100L, "Tâche 1", TaskStatus.TODO, project, assignee);
         task.setProject(project);
         task.setAssignee(assignee);
@@ -78,8 +96,10 @@ public class ModelMapperUtilTest {
 
     @Test
     void testNullSafety() {
-        assertNull(modelMapperUtil.toUserDTO(null));
-        assertNull(modelMapperUtil.toUser(null));
+        assertNull(getUserMapper.toDto(null));
+        assertNull(getUserMapper.toEntity(null));
+        assertNull(createUserMapper.toDto(null));
+        assertNull(createUserMapper.toEntity(null));
         assertNull(modelMapperUtil.toProjectDTO(null));
         assertNull(modelMapperUtil.toProject(null));
         assertNull(modelMapperUtil.toTaskDTO(null));
@@ -89,8 +109,8 @@ public class ModelMapperUtilTest {
 
     @Test
     void testNestedMapping() {
-        User creator = new User(4L, "dave", null, null);
-        User assignee = new User(5L, "eve", null, null);
+        User creator = new User(4L, "dave", "password", Collections.emptyList(), Collections.emptyList());
+        User assignee = new User(5L, "eve", "password", Collections.emptyList(), Collections.emptyList());
         Task task = new Task(200L, "Tâche 2", TaskStatus.DONE, null, assignee);
         Project project = new Project(30L, "Projet Z", creator, List.of(task));
         task.setProject(project);
@@ -101,4 +121,4 @@ public class ModelMapperUtilTest {
         assertEquals("Projet Z", projectDTO.getName());
         assertEquals(4L, projectDTO.getCreatorId());
     }
-} 
+}

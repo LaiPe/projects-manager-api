@@ -1,7 +1,7 @@
 package com.humanbooster.exam_spring.controller;
 
-import com.humanbooster.exam_spring.dto.ProjectDTO;
-import com.humanbooster.exam_spring.dto.TaskDTO;
+import com.humanbooster.exam_spring.dto.project.ProjectDTO;
+import com.humanbooster.exam_spring.dto.task.TaskDTO;
 import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.service.ProjectService;
 import com.humanbooster.exam_spring.service.TaskService;

@@ -3,7 +3,8 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "username": "alicea"
+  "username": "alicea",
+  "password": "password123"
 }
 
 ### Récupérer un utilisateur par ID
@@ -30,7 +31,7 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": "Tâche 1",
+  "title": "Tâche de test",
   "status": "TODO",
   "projectId": 1,
   "assigneeId": 1
@@ -49,4 +50,4 @@ Content-Type: application/json
 GET http://localhost:8080/projects/1/tasks
 
 ### Récupérer les tâches d'un utilisateur
-GET http://localhost:8080/users/1/tasks 
+GET http://localhost:8080/users/1/tasks

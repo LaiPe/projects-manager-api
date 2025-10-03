@@ -1,12 +1,10 @@
 package com.humanbooster.exam_spring.utils;
 
-import com.humanbooster.exam_spring.dto.ProjectDTO;
-import com.humanbooster.exam_spring.dto.TaskDTO;
-import com.humanbooster.exam_spring.dto.UpdateStatusTaskDTO;
-import com.humanbooster.exam_spring.dto.UserDTO;
+import com.humanbooster.exam_spring.dto.project.ProjectDTO;
+import com.humanbooster.exam_spring.dto.task.TaskDTO;
+import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskDTO;
 import com.humanbooster.exam_spring.model.Project;
 import com.humanbooster.exam_spring.model.Task;
-import com.humanbooster.exam_spring.model.User;
 
 import org.mapstruct.Mapper;
 
@@ -33,11 +31,4 @@ public interface ModelMapperUtil {
 
     UpdateStatusTaskDTO toUpdateStatusTaskDTO(Task task);
     Task toTask(UpdateStatusTaskDTO dto);
-
-
-    UserDTO toUserDTO(User user);
-
-    @Mapping(target = "projects", ignore = true)
-    @Mapping(target = "tasks", ignore = true)
-    User toUser(UserDTO dto);
 } 

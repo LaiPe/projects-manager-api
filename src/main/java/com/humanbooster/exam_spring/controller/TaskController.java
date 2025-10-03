@@ -1,7 +1,7 @@
 package com.humanbooster.exam_spring.controller;
 
-import com.humanbooster.exam_spring.dto.TaskDTO;
-import com.humanbooster.exam_spring.dto.UpdateStatusTaskDTO;
+import com.humanbooster.exam_spring.dto.task.TaskDTO;
+import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskDTO;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.service.TaskService;
 import com.humanbooster.exam_spring.utils.ModelMapperUtil;

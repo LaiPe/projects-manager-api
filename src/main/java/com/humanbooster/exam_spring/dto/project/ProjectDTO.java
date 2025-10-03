@@ -1,4 +1,4 @@
-package com.humanbooster.exam_spring.dto;
+package com.humanbooster.exam_spring.dto.project;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

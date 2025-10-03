@@ -21,6 +21,9 @@ public class User {
     @Column(nullable = false, length = 70)
     private String username;
 
+    @Column(nullable = false, length = 70)
+    private String password;
+
     @OneToMany(mappedBy = "creator")
     @JsonManagedReference("creator-projects")
     private List<Project> projects;
