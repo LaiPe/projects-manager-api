@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CreateUserMapper extends GenericDTOMapper<User, CreateUserDTO> {
     @Override
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "projects", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     User toEntity(CreateUserDTO dto);

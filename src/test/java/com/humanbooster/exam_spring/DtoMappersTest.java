@@ -1,8 +1,13 @@
-package com.humanbooster.exam_spring.utils;
+package com.humanbooster.exam_spring;
 
 import com.humanbooster.exam_spring.dto.project.ProjectDTO;
-import com.humanbooster.exam_spring.dto.task.TaskDTO;
+import com.humanbooster.exam_spring.dto.project.ProjectMapper;
+import com.humanbooster.exam_spring.dto.task.CreateTaskDTO;
+import com.humanbooster.exam_spring.dto.task.CreateTaskMapper;
+import com.humanbooster.exam_spring.dto.task.GetTaskDTO;
+import com.humanbooster.exam_spring.dto.task.GetTaskMapper;
 import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskDTO;
+import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskMapper;
 import com.humanbooster.exam_spring.dto.user.CreateUserDTO;
 import com.humanbooster.exam_spring.dto.user.CreateUserMapper;
 import com.humanbooster.exam_spring.dto.user.GetUserDTO;
@@ -20,19 +25,27 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ModelMapperUtilTest {
+public class DtoMappersTest {
 
-    private ModelMapperUtil modelMapperUtil;
+    private ProjectMapper projectMapper;
 
     private CreateUserMapper createUserMapper;
     private GetUserMapper getUserMapper;
 
+    private CreateTaskMapper createTaskMapper;
+    private GetTaskMapper getTaskMapper;
+    private UpdateStatusTaskMapper updateStatusTaskMapper;
+
     @BeforeEach
     public void setUp() {
-        modelMapperUtil = Mappers.getMapper(ModelMapperUtil.class);
+        projectMapper = Mappers.getMapper(ProjectMapper.class);
 
         createUserMapper = Mappers.getMapper(CreateUserMapper.class);
         getUserMapper = Mappers.getMapper(GetUserMapper.class);
+
+        createTaskMapper = Mappers.getMapper(CreateTaskMapper.class);
+        getTaskMapper = Mappers.getMapper(GetTaskMapper.class);
+        updateStatusTaskMapper = Mappers.getMapper(UpdateStatusTaskMapper.class);
     }
 
     @Test
@@ -60,12 +73,12 @@ public class ModelMapperUtilTest {
     void testProjectToProjectDTOAndBack() {
         User creator = new User(2L, "bob", "password", Collections.emptyList(), Collections.emptyList());
         Project project = new Project(10L, "Projet X", creator, Collections.emptyList());
-        ProjectDTO dto = modelMapperUtil.toProjectDTO(project);
+        ProjectDTO dto = projectMapper.toDto(project);
         assertEquals(project.getId(), dto.getId());
         assertEquals(project.getName(), dto.getName());
         assertNotNull(dto.getCreatorId());
 
-        Project mapped = modelMapperUtil.toProject(dto);
+        Project mapped = projectMapper.toEntity(dto);
         assertEquals(project.getId(), mapped.getId());
         assertEquals(project.getName(), mapped.getName());
         assertNotNull(mapped.getCreator());
@@ -79,19 +92,42 @@ public class ModelMapperUtilTest {
         task.setProject(project);
         task.setAssignee(assignee);
         
-        TaskDTO dto = modelMapperUtil.toTaskDTO(task);
+        // Test GetTaskMapper
+        GetTaskDTO dto = getTaskMapper.toDto(task);
         assertEquals(task.getId(), dto.getId());
         assertEquals(task.getTitle(), dto.getTitle());
         assertEquals(task.getStatus(), dto.getStatus());
         assertEquals(project.getId(), dto.getProjectId());
         assertEquals(assignee.getId(), dto.getAssigneeId());
 
-        Task mapped = modelMapperUtil.toTask(dto);
+        Task mapped = getTaskMapper.toEntity(dto);
         assertEquals(task.getId(), mapped.getId());
         assertEquals(task.getTitle(), mapped.getTitle());
         assertEquals(task.getStatus(), mapped.getStatus());
         assertEquals(project.getId(), mapped.getProject().getId());
         assertEquals(assignee.getId(), mapped.getAssignee().getId());
+
+        // Test CreateTaskMapper
+        CreateTaskDTO createDto = createTaskMapper.toDto(task);
+        assertEquals(task.getTitle(), createDto.getTitle());
+        assertEquals(task.getStatus(), createDto.getStatus());
+        assertEquals(project.getId(), createDto.getProjectId());
+        assertEquals(assignee.getId(), createDto.getAssigneeId());
+
+        Task createMapped = createTaskMapper.toEntity(createDto);
+        assertEquals(task.getTitle(), createMapped.getTitle());
+        assertEquals(task.getStatus(), createMapped.getStatus());
+        assertEquals(project.getId(), createMapped.getProject().getId());
+        assertEquals(assignee.getId(), createMapped.getAssignee().getId());
+
+        // Test UpdateStatusTaskMapper
+        UpdateStatusTaskDTO updateDto = updateStatusTaskMapper.toDto(task);
+        assertEquals(task.getId(), updateDto.getId());
+        assertEquals(task.getStatus(), updateDto.getStatus());
+
+        Task updateMapped = updateStatusTaskMapper.toEntity(updateDto);
+        assertEquals(task.getId(), updateMapped.getId());
+        assertEquals(task.getStatus(), updateMapped.getStatus());
     }
 
     @Test
@@ -100,11 +136,14 @@ public class ModelMapperUtilTest {
         assertNull(getUserMapper.toEntity(null));
         assertNull(createUserMapper.toDto(null));
         assertNull(createUserMapper.toEntity(null));
-        assertNull(modelMapperUtil.toProjectDTO(null));
-        assertNull(modelMapperUtil.toProject(null));
-        assertNull(modelMapperUtil.toTaskDTO(null));
-        assertNull(modelMapperUtil.toTask((TaskDTO) null));
-        assertNull(modelMapperUtil.toTask((UpdateStatusTaskDTO) null));
+        assertNull(projectMapper.toDto(null));
+        assertNull(projectMapper.toEntity(null));
+        assertNull(getTaskMapper.toDto(null));
+        assertNull(getTaskMapper.toEntity(null));
+        assertNull(createTaskMapper.toDto(null));
+        assertNull(createTaskMapper.toEntity(null));
+        assertNull(updateStatusTaskMapper.toDto(null));
+        assertNull(updateStatusTaskMapper.toEntity(null));
     }
 
     @Test
@@ -117,7 +156,7 @@ public class ModelMapperUtilTest {
         creator.setProjects(List.of(project));
         assignee.setTasks(List.of(task));
 
-        ProjectDTO projectDTO = modelMapperUtil.toProjectDTO(project);
+        ProjectDTO projectDTO = projectMapper.toDto(project);
         assertEquals("Projet Z", projectDTO.getName());
         assertEquals(4L, projectDTO.getCreatorId());
     }
