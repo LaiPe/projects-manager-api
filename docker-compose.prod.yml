@@ -43,7 +43,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
     ports:
-      - "127.0.0.1:8080:8080"  # Local uniquement
+      - "8080:8080" # Exposé pour Caddy
     networks:
       - caddy_network      # Pour communiquer avec Caddy
       - projects_manager_internal  # Réseau privé pour la DB
