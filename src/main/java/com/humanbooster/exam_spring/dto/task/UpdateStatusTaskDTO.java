@@ -1,4 +1,4 @@
-package com.humanbooster.exam_spring.dto;
+package com.humanbooster.exam_spring.dto.task;
 
 import com.humanbooster.exam_spring.model.TaskStatus;
 
