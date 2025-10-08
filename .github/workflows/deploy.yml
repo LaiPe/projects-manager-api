@@ -82,6 +82,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} '
             cd ${{ secrets.VPS_APP_PATH }} || exit 1
-            docker compose --env-file .env.prod pull
+            docker compose --env-file .env.prod down
             docker compose --env-file .env.prod up -d --remove-orphans
           '
