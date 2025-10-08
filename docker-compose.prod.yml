@@ -5,8 +5,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env.prod
-    ports:
-      - "127.0.0.1:3306:3306"  # Local uniquement
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -42,8 +40,6 @@ services:
       - .env.prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
-    ports:
-      - "8080:8080" # Exposé pour Caddy
     networks:
       - caddy_network      # Pour communiquer avec Caddy
       - projects_manager_internal  # Réseau privé pour la DB
