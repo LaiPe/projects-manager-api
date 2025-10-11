@@ -3,8 +3,8 @@ POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "nouvelutilisateur",
-  "password": "motdepassefort"
+  "username": "alicea",
+  "password": "password123"
 }
 
 ### Authentification : Connexion
@@ -19,6 +19,7 @@ Content-Type: application/json
 ### Créer un utilisateur
 POST http://localhost:8080/api/users
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyMTcyNTQsImV4cCI6MTc2MDIxODE1NH0.pseZa-EyEmx2VwLMCUI3bdez9l6-eJ0IHtb2qrnQctc
 
 {
   "username": "alicea",
@@ -27,11 +28,13 @@ Content-Type: application/json
 
 ### Récupérer un utilisateur par ID
 GET http://localhost:8080/api/users/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyMTY1NTgsImV4cCI6MTc2MDIxNzQ1OH0.S8_2bb9ngE89ufqbbcMRZHJDNzuACnn9B4QWJ8nwM1k
 
 
 ### Créer un projet
 POST http://localhost:8080/api/projects
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyMTcyNTQsImV4cCI6MTc2MDIxODE1NH0.pseZa-EyEmx2VwLMCUI3bdez9l6-eJ0IHtb2qrnQctc
 
 {
   "name": "Projet Test",

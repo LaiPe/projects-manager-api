@@ -41,6 +41,9 @@ public class UserService extends GenericJPAService<User, Long> implements UserDe
 
     @Override
     public User create(User entity) {
+        if (utilisateurRepository.findByUsername(entity.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Nom d'utilisateur déjà utilisé");
+        }
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         return super.create(entity);
     }
