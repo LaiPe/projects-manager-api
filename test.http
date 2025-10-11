@@ -1,5 +1,23 @@
+### Authentification : Inscription
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "nouvelutilisateur",
+  "password": "motdepassefort"
+}
+
+### Authentification : Connexion
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "alicea",
+  "password": "password123"
+}
+
 ### Créer un utilisateur
-POST http://localhost:8080/users
+POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
@@ -8,11 +26,11 @@ Content-Type: application/json
 }
 
 ### Récupérer un utilisateur par ID
-GET http://localhost:8080/users/2
+GET http://localhost:8080/api/users/2
 
 
 ### Créer un projet
-POST http://localhost:8080/projects
+POST http://localhost:8080/api/projects
 Content-Type: application/json
 
 {
@@ -21,13 +39,13 @@ Content-Type: application/json
 }
 
 ### Récupérer un projet par ID
-GET http://localhost:8080/projects/2
+GET http://localhost:8080/api/projects/2
 
 ### Lister les projets d'un utilisateur
-GET http://localhost:8080/users/1/projects
+GET http://localhost:8080/api/users/1/projects
 
 ### Créer une tâche
-POST http://localhost:8080/tasks
+POST http://localhost:8080/api/tasks
 Content-Type: application/json
 
 {
@@ -38,7 +56,7 @@ Content-Type: application/json
 }
 
 ### Modifier le statut d'une tâche
-PATCH http://localhost:8080/tasks
+PATCH http://localhost:8080/api/tasks
 Content-Type: application/json
 
 {
@@ -47,7 +65,7 @@ Content-Type: application/json
 }
 
 ### Récupérer les tâches d'un projet
-GET http://localhost:8080/projects/1/tasks
+GET http://localhost:8080/api/projects/1/tasks
 
 ### Récupérer les tâches d'un utilisateur
-GET http://localhost:8080/users/1/tasks
+GET http://localhost:8080/api/users/1/tasks

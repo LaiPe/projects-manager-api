@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("api/projects")
 @RequiredArgsConstructor
 public class ProjectController {
 

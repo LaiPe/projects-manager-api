@@ -11,5 +11,6 @@ public interface GetUserMapper extends GenericDTOMapper<User, GetUserDTO> {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "projects", ignore = true)
     @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
     User toEntity(GetUserDTO dto);
 }
