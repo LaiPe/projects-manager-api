@@ -34,7 +34,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyM
 ### Créer un projet
 POST http://localhost:8080/api/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyMTcyNTQsImV4cCI6MTc2MDIxODE1NH0.pseZa-EyEmx2VwLMCUI3bdez9l6-eJ0IHtb2qrnQctc
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNTU2MTUsImV4cCI6MTc2MDI1NjUxNX0.wg81YUnLwb1I9OB6LTiYP_u-mnirpwQNLoR_0Fy9Ius
 
 {
   "name": "Projet Test",
