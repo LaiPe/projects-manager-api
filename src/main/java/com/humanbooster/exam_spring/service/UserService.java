@@ -1,5 +1,6 @@
 package com.humanbooster.exam_spring.service;
 
+import com.humanbooster.exam_spring.controller.handler.AlreadyUsedUsernameException;
 import com.humanbooster.exam_spring.model.User;
 import com.humanbooster.exam_spring.repository.UserRepository;
 import com.humanbooster.exam_spring.service.generic.GenericJPAService;
@@ -42,7 +43,7 @@ public class UserService extends GenericJPAService<User, Long> implements UserDe
     @Override
     public User create(User entity) {
         if (utilisateurRepository.findByUsername(entity.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Nom d'utilisateur déjà utilisé");
+            throw new AlreadyUsedUsernameException(entity.getUsername());
         }
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         return super.create(entity);
