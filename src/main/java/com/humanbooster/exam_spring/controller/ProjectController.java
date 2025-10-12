@@ -11,6 +11,7 @@ import com.humanbooster.exam_spring.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class ProjectController {
     private final GetTaskMapper getTaskMapper;
 
     @PostMapping
+    @PreAuthorize("@userService.getById(#projectDTO.creatorId).get().username == authentication.name")
     public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectDTO projectDTO) {
         Project savedProject = projectService.create(projectMapper.toEntity(projectDTO));
         return ResponseEntity.ok(projectMapper.toDto(savedProject));
@@ -35,6 +37,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@projectService.getById(#id).get().creator.username == authentication.name")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable Long id) {
         return projectService.getById(id)
                 .map(project -> ResponseEntity.ok(projectMapper.toDto(project)))
@@ -42,6 +45,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/tasks")
+    @PreAuthorize("@projectService.getById(#id).get().creator.username == authentication.name")
     public ResponseEntity<List<GetTaskDTO>> getProjectTasks(@PathVariable Long id) {
         return ResponseEntity.ok(
                 taskService.getTasksByProjectId(id)

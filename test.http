@@ -19,7 +19,7 @@ Content-Type: application/json
 ### Créer un utilisateur
 POST http://localhost:8080/api/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyMTcyNTQsImV4cCI6MTc2MDIxODE1NH0.pseZa-EyEmx2VwLMCUI3bdez9l6-eJ0IHtb2qrnQctc
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjA0OTIsImV4cCI6MTc2MDI2MTM5Mn0._XMIP_upPmKEtoEF7jpP1rd-9eJGJ0wdidNp-TZxeXs
 
 {
   "username": "alicea",
@@ -27,29 +27,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyM
 }
 
 ### Récupérer un utilisateur par ID
-GET http://localhost:8080/api/users/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyMTY1NTgsImV4cCI6MTc2MDIxNzQ1OH0.S8_2bb9ngE89ufqbbcMRZHJDNzuACnn9B4QWJ8nwM1k
+GET http://localhost:8080/api/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjA0OTIsImV4cCI6MTc2MDI2MTM5Mn0._XMIP_upPmKEtoEF7jpP1rd-9eJGJ0wdidNp-TZxeXs
 
 
 ### Créer un projet
 POST http://localhost:8080/api/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNTc0MzMsImV4cCI6MTc2MDI1ODMzM30.7i3mq2jJdM_SEW2UJS2BN4l19XgIAi5h3JLSOW-O48Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
 
 {
   "name": "Projet Test",
-  "creatorId": 2
+  "creatorId": 1
 }
 
 ### Récupérer un projet par ID
-GET http://localhost:8080/api/projects/2
+GET http://localhost:8080/api/projects/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
 
 ### Lister les projets d'un utilisateur
 GET http://localhost:8080/api/users/1/projects
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
 
 ### Créer une tâche
 POST http://localhost:8080/api/tasks
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
 
 {
   "title": "Tâche de test",
@@ -61,6 +64,7 @@ Content-Type: application/json
 ### Modifier le statut d'une tâche
 PATCH http://localhost:8080/api/tasks
 Content-Type: application/json
+Authorization: Bearer eyJhbGcOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
 
 {
   "id": 1,

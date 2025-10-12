@@ -12,6 +12,7 @@ import com.humanbooster.exam_spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@userService.getById(#id).get().username == authentication.name")
     public ResponseEntity<GetUserDTO> getUser(@PathVariable Long id) {
         return userService.getById(id)
                 .map(user -> ResponseEntity.ok(getUserMapper.toDto(user)))
@@ -45,6 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/projects")
+    @PreAuthorize("@userService.getById(#id).get().username == authentication.name")
     public ResponseEntity<List<ProjectDTO>> getProjectsUser(@PathVariable Long id) {
         return ResponseEntity.ok(
                 projectService.findProjectsByCreatorId(id)
@@ -55,6 +58,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/tasks")
+    @PreAuthorize("@userService.getById(#id).get().username == authentication.name")
     public ResponseEntity<List<GetTaskDTO>> getTasksUser(@PathVariable Long id) {
         return ResponseEntity.ok(
                 taskService.getTasksByAssigneeId(id)

@@ -12,6 +12,7 @@ import com.humanbooster.exam_spring.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,12 +28,14 @@ public class TaskController {
     private final UpdateStatusTaskMapper updateStatusTaskMapper;
 
     @PostMapping
+    @PreAuthorize("@projectService.getById(#dto.projectId).get().creator.username == authentication.name")
     public ResponseEntity<GetTaskDTO> createTask(@RequestBody @Valid CreateTaskDTO dto) {
         Task savedTask = taskService.create(createTaskMapper.toEntity(dto));
         return ResponseEntity.ok(getTaskMapper.toDto(savedTask));
     }
 
     @PatchMapping
+    @PreAuthorize("@taskService.getById(#updateStatusTaskDTO.id).get().project.creator.username == authentication.name")
     public ResponseEntity<GetTaskDTO> updateStatus(@RequestBody @Valid UpdateStatusTaskDTO updateStatusTaskDTO) {
         return taskService.update(updateStatusTaskMapper.toEntity(updateStatusTaskDTO), updateStatusTaskDTO.getId())
                 .map(task -> ResponseEntity.ok(getTaskMapper.toDto(task)))
