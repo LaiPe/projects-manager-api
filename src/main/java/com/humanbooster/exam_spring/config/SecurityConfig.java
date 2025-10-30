@@ -38,7 +38,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Désactivation de CSRF pour les API REST
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS avec la source personnalisée
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("api/auth/**").permitAll() // Autoriser les routes d'authentification
+                        .requestMatchers("api/auth/register").permitAll() // Autoriser les routes d'inscription
+                        .requestMatchers("api/auth/login").permitAll() // Autoriser les routes d'authentification
                         .anyRequest().authenticated() // Toutes les autres requêtes nécessitent une authentification
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

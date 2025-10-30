@@ -17,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/auth")
@@ -76,6 +73,13 @@ public class AuthController {
 
         log.info("Utilisateur créé avec succès: {}", savedUser.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse("User registered successfully"));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<AuthResponse> verify() {
+        // Si cette méthode est appelée, cela signifie que l'utilisateur est authentifié (grâce au filtre JWT)
+        log.info("Vérification de l'authentification réussie");
+        return ResponseEntity.ok(new AuthResponse("User is authenticated"));
     }
 
     @Data
