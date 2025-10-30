@@ -6,7 +6,11 @@ import com.humanbooster.exam_spring.dto.auth.RegisterMapper;
 import com.humanbooster.exam_spring.model.User;
 import com.humanbooster.exam_spring.service.JwtService;
 import com.humanbooster.exam_spring.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,27 +35,52 @@ public class AuthController {
     private final RegisterMapper registerMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         log.info("Tentative de connexion pour l'utilisateur: {}", loginDTO.getUsername());
         // Authentifier l'utilisateur
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
         );
-        // Générer l'access token
-        String accessToken = jwtService.generateToken(loginDTO.getUsername());
+        // Récupérer l'utilisateur pour obtenir son id
+        User user = (User) userService.loadUserByUsername(loginDTO.getUsername());
+        // Générer l'access token avec l'id utilisateur dans le payload
+        String accessToken = jwtService.generateToken(user.getUsername(), user.getId());
+
+        // Déposer le token dans un cookie HTTP-only nommé "access_token"
+        Cookie cookie = new Cookie("access_token", accessToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(15 * 60); // 15 minutes
+        cookie.setSecure(false); //TODO mettre true en prod si HTTPS
+        response.addCookie(cookie);
+
         log.info("Utilisateur connecté avec succès: {}", loginDTO.getUsername());
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok(new AuthResponse("User logged in successfully"));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterDTO registerDTO, HttpServletResponse response) {
         log.info("Tentative d'inscription pour l'utilisateur: {}", registerDTO.getUsername());
         // Créer le nouvel utilisateur
         User savedUser = userService.create(registerMapper.toEntity(registerDTO));
-        // Générer l'access token
-        String accessToken = jwtService.generateToken(savedUser.getUsername());
+        // Générer l'access token avec l'id utilisateur dans le payload
+        String accessToken = jwtService.generateToken(savedUser.getUsername(), savedUser.getId());
+
+        // Déposer le token dans un cookie HTTP-only nommé "access_token"
+        Cookie cookie = new Cookie("access_token", accessToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(15 * 60); // 15 minutes
+        cookie.setSecure(false); //TODO mettre true en prod si HTTPS
+        response.addCookie(cookie);
+
         log.info("Utilisateur créé avec succès: {}", savedUser.getUsername());
-        return ResponseEntity.status(HttpStatus.CREATED).body(accessToken);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse("User registered successfully"));
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class AuthResponse {
+        private String message;
+    }
 }

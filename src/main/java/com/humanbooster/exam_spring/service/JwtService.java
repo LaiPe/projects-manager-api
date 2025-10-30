@@ -52,6 +52,11 @@ public class JwtService {
         return generateToken(Map.of(), username, 1000 * 60 * 15); // 15 minutes
     }
 
+    // Nouvelle surcharge : inclure l'id utilisateur dans les claims
+    public String generateToken(String username, Long userId) {
+        return generateToken(Map.of("id", userId), username, 1000 * 60 * 15);
+    }
+
     // Méthode pour extraire **tous les "claims"** (les données contenues dans le token).
     // Les claims sont typiquement : username, date d’expiration, rôles, etc.
     public Claims extractAllClaims(String token) {
@@ -73,6 +78,27 @@ public class JwtService {
         final Claims claims = extractAllClaims(token);
         // On applique la fonction passée en paramètre à l'objet Claims
         return claimsResolver.apply(claims);
+    }
+
+    /**
+     * Méthode utilitaire pour extraire l'id utilisateur stocké dans les claims.
+     * Retourne null si le claim est absent ou ne peut être converti en Long.
+     */
+    public Long extractUserId(String token) {
+        Object idObj = extractClaim(token, claims -> claims.get("id"));
+        if (idObj == null) return null;
+        if (idObj instanceof Integer) {
+            return ((Integer) idObj).longValue();
+        }
+        if (idObj instanceof Long) {
+            return (Long) idObj;
+        }
+        try {
+            return Long.valueOf(idObj.toString());
+        } catch (NumberFormatException e) {
+            log.warn("Impossible de convertir le claim 'id' en Long: {}", idObj);
+            return null;
+        }
     }
 
     /**

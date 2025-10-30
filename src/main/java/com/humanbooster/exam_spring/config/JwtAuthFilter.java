@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -20,7 +21,7 @@ import java.io.IOException;
 
 /**
  * Filtre d'authentification JWT.
- * Intercepte les requêtes HTTP et valide les tokens JWT dans le header Authorization.
+ * Intercepte les requêtes HTTP et valide les tokens JWT dans le cookie HTTP-only `access_token`.
  */
 @Component
 @RequiredArgsConstructor
@@ -37,19 +38,31 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         
-        final String authHeader = request.getHeader("Authorization");
         final String accessToken;
         final String username;
         
-        // Vérifier si le header Authorization existe et commence par "Bearer "
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // Récupérer le token depuis un cookie HTTP-only nommé "access_token"
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        
-        // Extraire le token JWT (enlever "Bearer " du début)
-        accessToken = authHeader.substring(7);
-        
+
+        String tokenFromCookie = null;
+        for (Cookie c : cookies) {
+            if ("access_token".equals(c.getName())) {
+                tokenFromCookie = c.getValue();
+                break;
+            }
+        }
+
+        if (tokenFromCookie == null || tokenFromCookie.isBlank()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        accessToken = tokenFromCookie;
+
         try {
             // Extraire le nom d'utilisateur du token
             username = jwtService.extractUsername(accessToken);
@@ -91,4 +104,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Continuer la chaîne de filtres
         filterChain.doFilter(request, response);
     }
-} 
+}
