@@ -3,10 +3,11 @@ package com.humanbooster.exam_spring.controller;
 import com.humanbooster.exam_spring.dto.auth.LoginDTO;
 import com.humanbooster.exam_spring.dto.auth.RegisterDTO;
 import com.humanbooster.exam_spring.dto.auth.RegisterMapper;
+import com.humanbooster.exam_spring.dto.user.GetUserDTO;
+import com.humanbooster.exam_spring.dto.user.GetUserMapper;
 import com.humanbooster.exam_spring.model.User;
 import com.humanbooster.exam_spring.service.JwtService;
 import com.humanbooster.exam_spring.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,9 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     private final RegisterMapper registerMapper;
+    private final GetUserMapper getUserMapper;
+    private final com.humanbooster.exam_spring.utils.SecurityUtil securityUtil;
+    private final com.humanbooster.exam_spring.service.CookieService cookieService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
@@ -44,15 +48,10 @@ public class AuthController {
         String accessToken = jwtService.generateToken(user.getUsername(), user.getId());
 
         // Déposer le token dans un cookie HTTP-only nommé "access_token"
-        Cookie cookie = new Cookie("access_token", accessToken);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(15 * 60); // 15 minutes
-        cookie.setSecure(false); //TODO mettre true en prod si HTTPS
-        response.addCookie(cookie);
+        response.addCookie(cookieService.createAccessTokenCookie(accessToken));
 
         log.info("Utilisateur connecté avec succès: {}", loginDTO.getUsername());
-        return ResponseEntity.ok(new AuthResponse("User logged in successfully"));
+        return ResponseEntity.ok(new AuthResponse("User logged in successfully", getUserMapper.toDto(user)));
     }
 
     @PostMapping("/register")
@@ -64,27 +63,38 @@ public class AuthController {
         String accessToken = jwtService.generateToken(savedUser.getUsername(), savedUser.getId());
 
         // Déposer le token dans un cookie HTTP-only nommé "access_token"
-        Cookie cookie = new Cookie("access_token", accessToken);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(15 * 60); // 15 minutes
-        cookie.setSecure(false); //TODO mettre true en prod si HTTPS
-        response.addCookie(cookie);
+        response.addCookie(cookieService.createAccessTokenCookie(accessToken));
 
         log.info("Utilisateur créé avec succès: {}", savedUser.getUsername());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse("User registered successfully"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse("User registered successfully", getUserMapper.toDto(savedUser)));
     }
 
     @GetMapping("/verify")
     public ResponseEntity<AuthResponse> verify() {
         // Si cette méthode est appelée, cela signifie que l'utilisateur est authentifié (grâce au filtre JWT)
         log.info("Vérification de l'authentification réussie");
-        return ResponseEntity.ok(new AuthResponse("User is authenticated"));
+
+        // Utiliser l'utilitaire pour récupérer les infos utilisateur depuis le contexte de sécurité
+        GetUserDTO userDto = securityUtil.getCurrentUserFromAuthentification();
+
+        if (userDto != null) {
+            return ResponseEntity.ok(new AuthResponse("User is authenticated (token present)", userDto));
+        }
+
+        return ResponseEntity.ok(new AuthResponse("User is authenticated", null));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        // Supprime le cookie d'accès côté client
+        response.addCookie(cookieService.createClearAccessTokenCookie());
+        return ResponseEntity.noContent().build();
     }
 
     @Data
     @AllArgsConstructor
     public static class AuthResponse {
         private String message;
+        private GetUserDTO user;
     }
 }

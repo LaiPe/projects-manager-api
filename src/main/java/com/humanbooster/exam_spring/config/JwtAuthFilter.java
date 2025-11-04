@@ -2,11 +2,11 @@ package com.humanbooster.exam_spring.config;
 
 import com.humanbooster.exam_spring.service.JwtService;
 import com.humanbooster.exam_spring.service.UserService;
+import com.humanbooster.exam_spring.utils.SecurityUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -30,6 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserService userService;
+    private final SecurityUtil securityUtil;
 
     @Override
     protected void doFilterInternal(
@@ -41,21 +42,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String accessToken;
         final String username;
         
-        // Récupérer le token depuis un cookie HTTP-only nommé "access_token"
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        String tokenFromCookie = null;
-        for (Cookie c : cookies) {
-            if ("access_token".equals(c.getName())) {
-                tokenFromCookie = c.getValue();
-                break;
-            }
-        }
-
+        // Extraire le token depuis la requête via SecurityUtil
+        String tokenFromCookie = securityUtil.getTokenFromRequest(request);
         if (tokenFromCookie == null || tokenFromCookie.isBlank()) {
             filterChain.doFilter(request, response);
             return;
@@ -79,7 +67,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     // Créer un token d'authentification
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
-                            null,
+                            accessToken, // stocke le token JWT dans les credentials pour y accéder plus tard
                             userDetails.getAuthorities()
                     );
                     
