@@ -55,4 +55,19 @@ public class ProjectController {
         );
     }
 
+    @PatchMapping("/{id}")
+    @PreAuthorize("@projectService.getById(#projectDTO.id).get().creator.username == authentication.name")
+    public ResponseEntity<ProjectDTO> updateProject(@RequestBody @Valid ProjectDTO projectDTO) {
+        return projectService.update(projectMapper.toEntity(projectDTO), projectDTO.getId())
+                .map(project -> ResponseEntity.ok(projectMapper.toDto(project)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@projectService.getById(#id).get().creator.username == authentication.name")
+    public ResponseEntity<Object> deleteProject(@PathVariable Long id) {
+        return projectService.deleteById(id)
+                .map(project -> ResponseEntity.ok().build())
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
