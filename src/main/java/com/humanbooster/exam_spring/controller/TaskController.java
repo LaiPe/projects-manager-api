@@ -34,10 +34,10 @@ public class TaskController {
         return ResponseEntity.ok(getTaskMapper.toDto(savedTask));
     }
 
-    @PatchMapping
-    @PreAuthorize("@taskService.getById(#updateStatusTaskDTO.id).get().project.creator.username == authentication.name")
-    public ResponseEntity<GetTaskDTO> updateStatus(@RequestBody @Valid UpdateStatusTaskDTO updateStatusTaskDTO) {
-        return taskService.update(updateStatusTaskMapper.toEntity(updateStatusTaskDTO), updateStatusTaskDTO.getId())
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("@taskService.getById(#id).get().project.creator.username == authentication.name")
+    public ResponseEntity<GetTaskDTO> updateStatus(@PathVariable Long id, @RequestBody @Valid UpdateStatusTaskDTO updateStatusTaskDTO) {
+        return taskService.update(updateStatusTaskMapper.toEntity(updateStatusTaskDTO), id)
                 .map(task -> ResponseEntity.ok(getTaskMapper.toDto(task)))
                 .orElse(ResponseEntity.notFound().build());
     }
