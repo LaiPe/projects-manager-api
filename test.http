@@ -34,7 +34,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyN
 ### Créer un projet
 POST http://localhost:8080/api/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
+Cookie: jwt=eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Miwic3ViIjoiYWFhIiwiaWF0IjoxNzYyNTk4MjI0LCJleHAiOjE3NjI1OTkxMjR9.pxzwyHm8jBt1yDYEfUvzCEvd8BLphH73R-1ex66crH8
 
 {
   "name": "Projet Test",
@@ -43,7 +43,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyN
 
 ### Récupérer un projet par ID
 GET http://localhost:8080/api/projects/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZWEiLCJpYXQiOjE3NjAyNjEzNzIsImV4cCI6MTc2MDI2MjI3Mn0.9UuL_ObrqTAMUKDNrR7scNt4QIPHw1eW8uWXOHVC_1U
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic3ViIjoibGVvIiwiaWF0IjoxNzYyNTk3ODIyLCJleHAiOjE3NjI1OTg3MjJ9.ZvqbaMOheTTMRqABndsosdPzru4nCyM6HxSR-GXa5XU
 
 ### Lister les projets d'un utilisateur
 GET http://localhost:8080/api/users/1/projects

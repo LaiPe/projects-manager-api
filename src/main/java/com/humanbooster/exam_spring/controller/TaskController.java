@@ -1,11 +1,6 @@
 package com.humanbooster.exam_spring.controller;
 
-import com.humanbooster.exam_spring.dto.task.CreateTaskDTO;
-import com.humanbooster.exam_spring.dto.task.CreateTaskMapper;
-import com.humanbooster.exam_spring.dto.task.GetTaskDTO;
-import com.humanbooster.exam_spring.dto.task.GetTaskMapper;
-import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskDTO;
-import com.humanbooster.exam_spring.dto.task.UpdateStatusTaskMapper;
+import com.humanbooster.exam_spring.dto.task.*;
 import com.humanbooster.exam_spring.model.Task;
 import com.humanbooster.exam_spring.service.TaskService;
 
@@ -24,6 +19,7 @@ public class TaskController {
     private final TaskService taskService;
 
     private final CreateTaskMapper createTaskMapper;
+    private final UpdateTaskMapper updateTaskMapper;
     private final GetTaskMapper getTaskMapper;
     private final UpdateStatusTaskMapper updateStatusTaskMapper;
 
@@ -35,10 +31,29 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("@taskService.getById(#id).get().project.creator.username == authentication.name")
+    @PreAuthorize(
+            "@taskService.getById(#id).get().project.creator.username == authentication.name " +
+            "or @taskService.getById(#id).get().assignee.username == authentication.name"
+    )
     public ResponseEntity<GetTaskDTO> updateStatus(@PathVariable Long id, @RequestBody @Valid UpdateStatusTaskDTO updateStatusTaskDTO) {
         return taskService.update(updateStatusTaskMapper.toEntity(updateStatusTaskDTO), id)
                 .map(task -> ResponseEntity.ok(getTaskMapper.toDto(task)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("@taskService.getById(#id).get().project.creator.username == authentication.name")
+    public ResponseEntity<GetTaskDTO> updateTask(@PathVariable Long id, @RequestBody @Valid UpdateTaskDTO dto) {
+        return taskService.update(updateTaskMapper.toEntity(dto), id)
+                .map(task -> ResponseEntity.ok(getTaskMapper.toDto(task)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@taskService.getById(#id).get().project.creator.username == authentication.name")
+    public ResponseEntity<Object> deleteTask(@PathVariable Long id) {
+        return taskService.deleteById(id)
+                .map(task -> ResponseEntity.ok().build())
                 .orElse(ResponseEntity.notFound().build());
     }
 }
