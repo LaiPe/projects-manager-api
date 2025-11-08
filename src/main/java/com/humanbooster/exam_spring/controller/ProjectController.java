@@ -37,7 +37,6 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("@projectService.getById(#id).get().creator.username == authentication.name")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable Long id) {
         return projectService.getById(id)
                 .map(project -> ResponseEntity.ok(projectMapper.toDto(project)))
