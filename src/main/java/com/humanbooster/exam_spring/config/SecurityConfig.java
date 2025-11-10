@@ -2,6 +2,8 @@ package com.humanbooster.exam_spring.config;
 
 import com.humanbooster.exam_spring.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +33,9 @@ public class SecurityConfig {
     private final UserService userService;
     private final JwtAuthFilter jwtAuthFilter;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${cors.allowed-origins}")
+    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,8 +74,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Utiliser allowedOriginPatterns pour autoriser localhost sur n'importe quel port
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:*", "https://localhost:*"));
+        // Séparer les origines multiples par des virgules si nécessaire
+        String[] origins = allowedOrigins.split(",");
+        configuration.setAllowedOrigins(List.of(origins));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
