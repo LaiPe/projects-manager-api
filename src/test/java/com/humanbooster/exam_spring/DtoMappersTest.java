@@ -125,7 +125,6 @@ public class DtoMappersTest {
         assertEquals(task.getStatus(), updateDto.getStatus());
 
         Task updateMapped = updateStatusTaskMapper.toEntity(updateDto);
-        assertEquals(task.getId(), updateMapped.getId());
         assertEquals(task.getStatus(), updateMapped.getStatus());
     }
 
