@@ -19,6 +19,9 @@ Cette application supporte **trois environnements distincts** :
 ### Développement local (H2)
 ```sh
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+# (Avec Powershell)
+mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
 ```
 Console H2 : http://localhost:8080/h2-console
 
@@ -34,60 +37,49 @@ docker-compose up --build
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
-## Utilisation en développement
+## 📋 API Endpoints
 
-1. **Prérequis**
-   - Java 21
-   - Maven
-   - Docker et Docker Compose (pour les environnements conteneurisés)
+### 🔐 Authentification (`/api/auth`)
+| Méthode | Endpoint | Description | Authentification | JSON Body |
+|---------|----------|-------------|------------------|-----------|
+| `POST` | `/api/auth/login` | Connexion utilisateur | ❌ | `{"username": "john", "password": "password123"}` |
+| `POST` | `/api/auth/register` | Inscription utilisateur | ❌ | `{"username": "john", "password": "password123"}` |
+| `GET` | `/api/auth/verify` | Vérification du token | ✅ | - |
+| `POST` | `/api/auth/logout` | Déconnexion utilisateur | ✅ | - |
 
-2. **Lancer l'environnement de développement**
+### 👥 Utilisateurs (`/api/users`)
+| Méthode | Endpoint | Description | Authentification | JSON Body |
+|---------|----------|-------------|------------------|-----------|
+| `POST` | `/api/users` | ~~Créer utilisateur~~ (deprecated) | ❌ | - |
+| `GET` | `/api/users/{id}` | Récupérer un utilisateur | ✅ | - |
+| `GET` | `/api/users/{id}/projects` | Projets d'un utilisateur | ✅ (propriétaire) | - |
+| `GET` | `/api/users/{id}/tasks` | Tâches assignées à un utilisateur | ✅ (propriétaire) | - |
 
-   - Clone le dépôt :
-     ```sh
-     git clone https://github.com/LaiPe/projects-manager-api
-     cd projects-manager-api
-     ```
-   - Lance les services (API + MySQL) :
-     ```sh
-     docker compose up --build
-     ```
-   - L'API est accessible sur : [http://localhost:8080](http://localhost:8080)
-   - La configuration par défaut (dev) se trouve dans `docker-compose.yml` et utilise des variables non sensibles.
+### 🗂️ Projets (`/api/projects`)
+| Méthode | Endpoint | Description | Authentification | JSON Body |
+|---------|----------|-------------|------------------|-----------|
+| `POST` | `/api/projects` | Créer un projet | ✅ (créateur) | `{"name": "Mon Projet", "creatorId": 1}` |
+| `GET` | `/api/projects/{id}` | Récupérer un projet | ✅ | - |
+| `GET` | `/api/projects/{id}/tasks` | Tâches d'un projet | ✅ (créateur) | - |
+| `PATCH` | `/api/projects/{id}` | Modifier un projet | ✅ (créateur) | `{"name": "Nouveau nom", "creatorId": 1}` |
+| `DELETE` | `/api/projects/{id}` | Supprimer un projet | ✅ (créateur) | - |
 
-3. **Tests**
-   - Pour lancer les tests :
-     ```sh
-     mvn test
-     ```
+### ✅ Tâches (`/api/tasks`)
+| Méthode | Endpoint | Description | Authentification | JSON Body |
+|---------|----------|-------------|------------------|-----------|
+| `POST` | `/api/tasks` | Créer une tâche | ✅ (créateur du projet) | `{"title": "Ma tâche", "status": "TODO", "projectId": 1, "assigneeId": 2}` |
+| `PATCH` | `/api/tasks/{id}/status` | Modifier le statut d'une tâche | ✅ (créateur ou assigné) | `{"status": "IN_PROGRESS"}` |
+| `PATCH` | `/api/tasks/{id}` | Modifier une tâche | ✅ (créateur du projet) | `{"title": "Nouveau titre", "assigneeId": 3}` |
+| `DELETE` | `/api/tasks/{id}` | Supprimer une tâche | ✅ (créateur du projet) | - |
 
-## Déploiement en production
-
-1. **Préparer les fichiers de configuration**
-   - Renseigner les variables sensibles dans un fichier `.env.prod` (non versionné, à placer sur le serveur).
-   - Exemple de variables à définir :
-     ```env
-     MYSQL_ROOT_PASSWORD=...
-     MYSQL_DATABASE=...
-     MYSQL_USER=...
-     MYSQL_PASSWORD=...
-     DB_HOST=mysql
-     DB_PORT=3306
-     DB_NAME=...
-     DB_USER=...
-     DB_PASSWORD=...
-     ```
-
-2. **Déployer avec Docker Compose**
-    - Le pipeline CI/CD copie automatiquement `docker-compose.prod.yml` sur le serveur dans le dossier de l'app.
-    - Vous n'avez donc rien à copier manuellement si vous utilisez le pipeline.
-    - Pour un déploiement manuel, copiez ces deux fichiers puis lancez :
-       ```sh
-       docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
-       ```
-
-3. **CI/CD**
-   - Le pipeline GitHub Actions build, push l'image sur GHCR, copie les fichiers nécessaires et déploie automatiquement sur le VPS.
+### 📝 Légende
+- **✅ Authentification requise** : Token JWT requis via cookie `access_token`
+- **❌ Public** : Accessible sans authentification
+- **🔒 Autorisations** :
+  - *Créateur* : Seul le créateur du projet peut effectuer l'action
+  - *Propriétaire* : Seul le propriétaire du compte peut effectuer l'action  
+  - *Assigné* : L'utilisateur assigné à la tâche peut effectuer l'action
+- **📊 Statuts des tâches** : `TODO`, `IN_PROGRESS`, `DONE`
 
 ## Sécurité
 - Ne versionnez jamais `.env.prod` ou tout fichier contenant des secrets.
